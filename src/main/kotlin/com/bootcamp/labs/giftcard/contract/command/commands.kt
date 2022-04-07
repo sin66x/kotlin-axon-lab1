@@ -3,7 +3,7 @@ package com.bootcamp.labs.giftcard.contract.command
 import org.axonframework.commandhandling.RoutingKey
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 
-data class IssueCardCommand(@RoutingKey var id: String, var amount: Int) {
+data class IssueCardCommand(@TargetAggregateIdentifier var id: String, var amount: Int) {
 
 }
 

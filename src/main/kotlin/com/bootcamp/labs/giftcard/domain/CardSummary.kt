@@ -6,6 +6,7 @@ import javax.persistence.Id
 
 @Entity
 public class CardSummary {
+    constructor(){}
     constructor(
         cardId: String,
         initialValue: Int,
@@ -18,8 +19,8 @@ public class CardSummary {
     }
 
     @Id
-    var cardId: String
+    lateinit var cardId: String
     var initialValue = 0
-    var issuedAt: Instant
+    lateinit var issuedAt: Instant
     var remainingValue = 0
 }

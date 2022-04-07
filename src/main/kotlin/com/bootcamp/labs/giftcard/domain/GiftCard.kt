@@ -15,14 +15,18 @@ import org.axonframework.spring.stereotype.Aggregate
 
 @Aggregate
 class GiftCard {
+
+    constructor(){}
+
     @AggregateIdentifier
     private var id: String = ""
-    private var amountOnCard = 0
+    internal var amountOnCard = 0
 
     @AggregateMember
     private var transactions: GiftCardTransactions = GiftCardTransactions()
 
-    constructor(issueCardCommand: IssueCardCommand){
+    @CommandHandler
+    fun handle(issueCardCommand: IssueCardCommand){
         AggregateLifecycle.apply(CardIssuedEvent(issueCardCommand.id, issueCardCommand.amount))
     }
 
@@ -30,15 +34,15 @@ class GiftCard {
     fun handle(redeemCardCommand: RedeemCardCommand) {
         require(redeemCardCommand.amount > 0) { "amount <= 0" }
         check(redeemCardCommand.amount <= amountOnCard) { "amount > remaining value" }
-        check(redeemCardCommand.transactionId in transactions.redeems) { "transaction id was used before" }
+        check(redeemCardCommand.transactionId !in transactions.redeems) { "transaction id was used before" }
         AggregateLifecycle.apply(CardRedeemedEvent(id, redeemCardCommand.transactionId, redeemCardCommand.amount))
     }
 
     @CommandHandler
     fun handle(reimburseCardCommand: ReimburseCardCommand) {
-        check(reimburseCardCommand.transactionId !in transactions.redeems) {"transaction not found"}
+        check(reimburseCardCommand.transactionId in transactions.redeems) {"transaction not found"}
         val reimbursingTransaction: CardRedeemedEvent = transactions.redeems[reimburseCardCommand.transactionId]!!
-        check(reimburseCardCommand.transactionId in transactions.reimburses) { "transaction was reimbursed before" }
+        check(reimburseCardCommand.transactionId !in transactions.reimburses) { "transaction was reimbursed before" }
         AggregateLifecycle.apply(CardReimbursedEvent(id, reimbursingTransaction.transactionId, reimbursingTransaction.amount))
     }
 
