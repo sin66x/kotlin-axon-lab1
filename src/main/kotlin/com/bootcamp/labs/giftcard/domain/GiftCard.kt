@@ -16,7 +16,7 @@ import org.axonframework.spring.stereotype.Aggregate
 @Aggregate
 class GiftCard {
 
-    constructor(){}
+    constructor()
 
     @AggregateIdentifier
     private var id: String = ""
