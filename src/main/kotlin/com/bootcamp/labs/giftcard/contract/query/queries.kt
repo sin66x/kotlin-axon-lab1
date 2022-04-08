@@ -1,8 +1,7 @@
 package com.bootcamp.labs.giftcard.contract.query
 
-class CountCardSummariesQuery{
-}
+class CountCardSummariesQuery
 
-data class FindCardSummariesQuery(val offset:Int,val limit: Int){
-}
-
+data class FindCardSummariesQuery(
+    val offset:Int,
+    val limit: Int)
